@@ -1,7 +1,7 @@
 # Análise de e-commerce com SQL e Power BI
 
 Este é um projeto de portfólio. Peguei uma base pública de um e-commerce brasileiro (a Olist, com cerca de 100 mil pedidos)
-e fiz o papel de analista para responder duas perguntas: a empresa está crescendo de forma saudável e, onde dá para melhorar?
+e fiz o papel de analista para responder duas perguntas: a empresa está crescendo de forma saudável, e onde dá para melhorar?
 Organizei e consultei os dados no MySQL, montei um dashboard no Power BI e escrevi as conclusões no [insights.md](insights.md).
 
 ![Visão geral](images/pagina1_visao_geral.png)
@@ -11,11 +11,11 @@ Organizei e consultei os dados no MySQL, montei um dashboard no Power BI e escre
 Entre jan/2017 e ago/2018 a empresa faturou R$ 13,18 milhões em 96.203 pedidos entregues, com ticket médio de R$ 137.
 
 - O faturamento de jan–ago/2018 foi 141% maior que o do mesmo período de 2017, mas o crescimento veio de mais pedidos: o ticket médio praticamente não mudou. Em 2018 o faturamento mensal ficou parado em torno de R$ 0,9 milhão e não superou o pico de novembro de 2017.
-- 97% dos clientes compraram uma única vez.
-- Cerca de 8% dos pedidos chegam atrasados, e a nota deles é bem menor: 1,7 nos atrasos acima de 7 dias, contra 4,3 nos pedidos no prazo. Isso mostra uma associação, mas não prova que o atraso causa a nota baixa. No script `05` eu tento ver se o atraso também reduz a chance de recompra.
+- 97% dos clientes compraram uma única vez, e mesmo entre os que deram nota 4 ou 5 só cerca de 4% voltaram.
+- Cerca de 8% dos pedidos chegam atrasados, e a nota deles é bem menor: 1,7 nos atrasos acima de 7 dias, contra 4,3 nos pedidos no prazo. Isso é uma associação e não prova que o atraso causa a nota baixa. Testei também se o atraso reduz a recompra (script `05`): quem teve o primeiro pedido atrasado volta um pouco menos (3,2% contra 4,0%), mas a diferença é pequena. Os atrasos se concentram no Nordeste (chegam a 24% em Alagoas) e no Rio de Janeiro (13,5%, contra 5,9% em São Paulo).
 - São Paulo, Rio de Janeiro e Minas Gerais respondem por cerca de 63% do faturamento.
 
-O que eu recomendaria, em ordem: cuidar dos atrasos e do prazo prometido ao cliente, criar uma ação para estimular a segunda compra e investigar por que o crescimento parou em 2018. A conclusão completa está no [insights.md](insights.md#conclusão-final).
+O que eu recomendaria: cuidar dos atrasos e do prazo prometido ao cliente (começando pelo Rio e pelo Nordeste), tratar a retenção como um problema à parte, já que a recompra é baixa até entre clientes satisfeitos, e investigar por que o crescimento parou em 2018. A conclusão completa está no [insights.md](insights.md#conclusão-final).
 
 ## Perguntas que guiaram a análise
 
@@ -91,7 +91,7 @@ Antes de analisar, rodei algumas checagens (script `02`). O que apareceu e o que
 | Pedidos com mais de uma avaliação | 547 | Usei a média da nota por pedido |
 | Preços zerados ou negativos | 0 | Nada a fazer |
 | Valor pago diferente de itens + frete (mais de R$ 1) | 249 (0,25%) | Provavelmente juros e vouchers; o faturamento usa o preço dos produtos |
-| `customer_id` muda a cada pedido | | A recorrência usa o `customer_unique_id` |
+| `customer_id` muda a cada pedido | Um mesmo cliente tem vários `customer_id` | A recorrência usa o `customer_unique_id` |
 
 ## Dificuldades no caminho
 
@@ -107,7 +107,7 @@ Antes de analisar, rodei algumas checagens (script `02`). O que apareceu e o que
 
 - A base não tem custo nem margem, então a análise fala de receita, não de lucro.
 - Considerei só pedidos entregues, e o faturamento não inclui o frete.
-- A relação entre atraso e nota é uma associação. Não dá para afirmar causa só com estes dados.
+- A relação entre atraso e nota é uma associação. Não dá para afirmar causa só com estes dados, e o teste de recompra não controla por categoria, estado ou preço.
 - Os dados são anonimizados e vão de 2016 a 2018; os meses de 2016 e o fim da base ficaram fora dos indicadores principais.
 
 ## Autor

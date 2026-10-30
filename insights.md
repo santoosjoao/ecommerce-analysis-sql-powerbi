@@ -60,12 +60,13 @@ jan–ago de 2018 vs 2017) e vem de **volume**, não de ticket, concentrando-se 
 - **Evidência:** 91,9% dos pedidos chegam no prazo, com nota **4,29**. Atraso de 1–3 dias: 3,60; de 4–7 dias: 2,11;
   acima de 7 dias: **1,70** (queda de 2,59 pontos, ou **-60%**). São 7.826 pedidos atrasados (**8,1%**) e o prazo médio de entrega é de **12,5 dias**.
 - **Recomendação:** revisar a promessa de prazo (estimar o que dá para cumprir), monitorar SLA por
-  transportadora e região, e avisar proativamente o cliente em caso de atraso. Como o problema atinge
-  só ~8% dos pedidos, o ganho em satisfação por real investido tende a ser alto.
+  transportadora e região, e avisar proativamente o cliente em caso de atraso. Começar pelo Rio de Janeiro e pelo
+  Nordeste, onde os atrasos se concentram (veja o teste da hipótese mais abaixo). Como o problema atinge só ~8% dos
+  pedidos, o ganho em satisfação por real investido tende a ser alto.
 
 ## 6. Baixíssima recorrência de clientes
 - **Achado:** quase todos os clientes compram uma única vez.
-- **Evidência:** **97,0%** (90.557) compraram uma vez; apenas **3,0%** (2.801) voltaram.
+- **Evidência:** **97,0%** (90.557) compraram uma vez; apenas **3,0%** (2.801) voltaram. A recompra é baixa até entre clientes satisfeitos (veja o teste da hipótese).
 - **Recomendação:** programa de pós-venda (e-mail em 30 e 60 dias), cupom de segunda compra e recomendação
   baseada na categoria da primeira compra. Estimativa simples: se 1% dos clientes (≈ 931) fizesse uma compra
   adicional pelo ticket médio, seriam **≈ R$ 128 mil** a mais, cerca de 1% do faturamento do período.
@@ -83,6 +84,38 @@ jan–ago de 2018 vs 2017) e vem de **volume**, não de ticket, concentrando-se 
 - **Recomendação:** programa de retenção e de SLA para os top vendedores e onboarding para desenvolver
   os de médio porte.
 
+## Teste da hipótese: o atraso reduz a recompra?
+
+Para saber se uma experiência ruim explica a baixa retenção, comparei a taxa de recompra conforme o primeiro pedido do
+cliente (script `05`). Entraram só clientes cujo primeiro pedido foi até fev/2018, para que todos tivessem pelo menos
+6 meses para voltar a comprar dentro da base.
+
+| Primeiro pedido | Clientes | Recompraram | Taxa de recompra |
+|---|---|---|---|
+| Entregue no prazo | 51.003 | 2.061 | 4,04% |
+| Entregue com atraso | 4.262 | 136 | 3,19% |
+
+| Nota do primeiro pedido | Clientes | Recompraram | Taxa de recompra |
+|---|---|---|---|
+| Sem avaliação | 410 | 14 | 3,41% |
+| 1 a 2 (ruim) | 7.207 | 263 | 3,65% |
+| 3 (regular) | 4.801 | 190 | 3,96% |
+| 4 a 5 (boa) | 42.849 | 1.730 | 4,04% |
+
+- **O que os números dizem:** quem teve o primeiro pedido atrasado recompra menos (3,19% contra 4,04%, uma queda relativa
+  de 21%). A diferença de 0,85 ponto percentual é maior do que o acaso explicaria (intervalo de confiança de 95%: 0,30 a
+  1,40 ponto percentual). Pela nota, a taxa vai de 4,04% (boa) para 3,65% (ruim), mas essa diferença não se distingue do acaso.
+- **O que isso significa:** o efeito existe, mas é pequeno. Se os clientes com entrega atrasada recomprassem como os demais,
+  seriam cerca de 36 clientes a mais no grupo analisado, ou algo perto de R$ 5 mil, usando o ticket médio. O dado mais
+  importante é outro: **mesmo os clientes satisfeitos (nota 4 a 5) recompram só 4%**. A baixa retenção, portanto, não é
+  principalmente um problema de logística.
+- **Onde os atrasos se concentram** (estados com pelo menos 300 pedidos): o Nordeste tem as maiores taxas (AL 24,0%, MA 19,6%,
+  PI 16,0%, CE e SE 15,4%, BA 14,0%) e prazos médios de 19 a 24 dias, contra 8,7 dias em SP. O Rio de Janeiro merece atenção:
+  é o segundo maior mercado e tem 13,5% de atraso, contra 5,9% em SP e 5,6% em MG. Pelos percentuais, SP e RJ juntos somam
+  cerca de metade dos pedidos atrasados em número absoluto (≈ 31% e ≈ 21%), numa estimativa feita a partir de valores arredondados.
+- **Cuidados:** isso continua sendo associação. Categoria, estado e preço podem influenciar tanto o atraso quanto a recompra,
+  e uma janela de 6 meses pode ser curta para produtos comprados com pouca frequência.
+
 ---
 
 ## Conclusão final
@@ -96,22 +129,25 @@ novos** (97% compram uma única vez). Além disso, há um problema operacional c
 
 | # | Problema | Evidência | Por que importa | Ação sugerida |
 |---|---|---|---|---|
-| 1 | Atraso na entrega | 8,1% dos pedidos atrasam; a nota é de 1,7 nos atrasos acima de 7 dias contra 4,3 no prazo; prazo médio de 12,5 dias, sendo 8,7 em SP e 15,1 em RJ e RS | Experiência ruim afeta reputação e, provavelmente, a recompra | Rever o prazo prometido, criar SLA por transportadora e região e avisar o cliente sobre atrasos |
-| 2 | Baixa retenção | 97% compraram uma vez; só 2.801 clientes recorrentes | A receita depende de adquirir clientes novos o tempo todo | Pós-venda em 30 e 60 dias, cupom de segunda compra e recomendação por categoria |
+| 1 | Atraso na entrega | 8,1% dos pedidos atrasam; a nota é de 1,7 nos atrasos acima de 7 dias contra 4,3 no prazo; prazo médio de 12,5 dias, sendo 8,7 em SP e 15,2 em RJ e RS; os atrasos se concentram no Nordeste (14% em média nos estados analisados) e no RJ (13,5%) | A nota despenca e a reputação sofre; o efeito direto na recompra é pequeno | Rever o prazo prometido, criar SLA por transportadora e região (começando por RJ e Nordeste) e avisar o cliente sobre atrasos |
+| 2 | Baixa retenção | 97% compraram uma vez; só 2.801 clientes recorrentes; mesmo com nota 4 a 5, só ~4% recompram | A receita depende de adquirir clientes novos o tempo todo | Pós-venda em 30 e 60 dias, cupom de segunda compra e recomendação por categoria |
 | 3 | Estagnação em 2018 | Média mensal de ~R$ 902 mil em 2018; maior mês foi nov/2017 (R$ 987,6 mil); ticket +0,5% | Sem novas alavancas, a receita não cresce | Investigar as causas, testar kits e frete grátis acima de um valor mínimo e planejar a sazonalidade |
 | 4 | Concentração | SP, RJ e MG = 63,3% do faturamento; 5 categorias = ~40%; 17,9% dos vendedores geram 80% | Risco de dependência de poucas regiões, categorias e vendedores | Expandir com logística local, ampliar o mix e criar programa de retenção dos top vendedores |
 | 5 | Frete alto fora de SP | Frete = 16,6% do faturamento; 16,8% a 18,2% em RJ, MG, RS e PR contra 13,9% em SP | Pode reduzir a conversão nas regiões mais distantes | Negociar transportadoras regionais e testar frete grátis condicionado |
 
-**Leitura do analista.** Os problemas 1 e 2 provavelmente estão ligados: uma experiência de entrega ruim tende a reduzir a
-chance de recompra. Essa é uma **hipótese**, e a base não permite provar o vínculo, porque a recompra é de apenas 3%.
-O problema 3 é, em parte, consequência dos demais: sem retenção e sem aumento de ticket, o crescimento depende só de
+**Leitura do analista.** Eu esperava que os problemas 1 e 2 estivessem ligados, e testei isso (script `05`). O vínculo
+existe, mas é fraco: quem teve a primeira entrega atrasada recompra 3,2% contra 4,0% dos demais, e mesmo clientes com nota
+4 a 5 recompram só 4%. Ou seja, a baixa retenção não se explica principalmente pela logística, e as duas frentes precisam de
+ações separadas. O problema 3 é, em parte, consequência dos demais: sem retenção e sem aumento de ticket, o crescimento depende só de
 aquisição. Os problemas 4 e 5 são riscos estruturais que ficam mais relevantes se a empresa quiser crescer fora do Sudeste.
 
 **Prioridade recomendada**
-1. **Logística:** é a ação mais controlável, atinge só ~8% dos pedidos (bom retorno para o esforço) e pode ser medida
-   por % de atraso e nota média.
-2. **Retenção:** estimativa simples, com o ticket médio de R$ 137: cada 1 ponto percentual de clientes que recomprarem
-   vale cerca de **R$ 128 mil**; 5 pontos percentuais, cerca de **R$ 640 mil**.
+1. **Logística, começando pelo RJ e pelo Nordeste:** é a ação mais controlável, atinge só ~8% dos pedidos e pode ser medida
+   por % de atraso e nota média. O ganho esperado está na satisfação e na reputação, não na recompra: o efeito direto
+   estimado na recompra foi de apenas ~R$ 5 mil.
+2. **Retenção, como frente própria:** estimativa simples, com o ticket médio de R$ 137: cada 1 ponto percentual de clientes
+   que recomprarem vale cerca de **R$ 128 mil**; 5 pontos percentuais, cerca de **R$ 640 mil**. Como a recompra é baixa até
+   entre clientes satisfeitos, o potencial está em ações de relacionamento, e não só em corrigir entregas.
 3. **Ticket, mix e regiões:** retomar o crescimento sem depender apenas de volume.
 
 **Metas sugeridas** (a validar com o negócio): reduzir o % de atraso de 8,1% para menos de 5%; elevar a recorrência de
@@ -124,9 +160,10 @@ aquisição. Os problemas 4 e 5 são riscos estruturais que ficam mais relevante
 - Base anonimizada, de 2016 a 2018. Os meses de 2016 e o fim da base (set/out 2018) ficam fora dos KPIs.
 - Valores de pagamento incluem frete e juros de parcelamento, por isso diferem do faturamento (que usa o preço dos produtos).
 - Pedidos de nov/2017 no item 1 incluem todos os status.
+- O teste de recompra usa uma janela de 6 meses e não controla por categoria, estado ou preço.
 
 ## Próximos passos
-- Rodar `sql/05_analise_hipotese_recompra.sql` e registrar aqui se a recompra é menor após entrega atrasada ou nota baixa.
+- Repetir o teste de recompra controlando por estado e categoria, e investigar por que a recompra é baixa mesmo entre clientes satisfeitos.
 - Segmentação RFM de clientes.
 - Previsão de demanda mensal.
 - Análise de texto dos comentários de avaliação.
