@@ -1,7 +1,7 @@
 # Análise de e-commerce com SQL e Power BI
 
 Este é um projeto de portfólio. Peguei uma base pública de um e-commerce brasileiro (a Olist, com cerca de 100 mil pedidos)
-e fiz o papel de analista para responder duas perguntas: a empresa está crescendo de forma saudável, e onde dá para melhorar?
+e fiz o papel de analista para responder duas perguntas: a empresa está crescendo de forma saudável e onde dá para melhorar?
 Organizei e consultei os dados no MySQL, montei um dashboard no Power BI e escrevi as conclusões no [insights.md](insights.md).
 
 ![Visão geral](images/pagina1_visao_geral.png)
